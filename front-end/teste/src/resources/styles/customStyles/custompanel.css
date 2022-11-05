@@ -1,0 +1,11 @@
+.mypanel .p-panel-header {
+  background-color: #567c67 !important;
+  color: #ffffff !important;
+
+  border-radius: 8px !important;
+  font-size: 1.2rem;
+}
+
+.mypanel .p-panel-content {
+  border: none !important;
+}

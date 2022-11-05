@@ -1,0 +1,4 @@
+.input-mask:read-only {
+  background-color: #e9ecee;
+  cursor: not-allowed;
+}
