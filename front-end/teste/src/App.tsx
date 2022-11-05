@@ -274,7 +274,7 @@ function App() {
                   className="text-base text-color surface-overlay border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full "
                 />
               </div>
-              <div className="field col-12 md:col-2 sm:col-6 mr-4 w-2">
+              <div className="field col-12 md:col sm:col-6">
                 <label
                   htmlFor="bairro"
                   aria-describedby="smallInfoBairro"
@@ -330,7 +330,7 @@ function App() {
                   Informe o número de telefone fixo
                 </small>
               </div>
-              <div className="field col-12 w-3 sm:col-6">
+              <div className="field col-12 md:col-3 sm:col">
                 <label htmlFor="txtCelular" className="font-medium">
                   Celular
                 </label>
