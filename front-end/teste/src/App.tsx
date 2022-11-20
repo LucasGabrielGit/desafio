@@ -5,13 +5,14 @@ import {
   Dropdown,
   InputText,
   Button,
+  Toast,
 } from "primereact";
 import { Toaster, toast } from "react-hot-toast";
 import { api } from "./service/api/api";
 
 import "./resources/styles/customStyles/custompanel.css";
 import "./resources/styles/customStyles/customcardtitle.css";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 
 function App() {
   //useStates que serão usados na aplicação
@@ -19,7 +20,7 @@ function App() {
   const [name, setName] = useState("");
   const [pais, setPais] = useState<any>(null);
   const [cpf, setCPF] = useState("");
-  const [telefoneFixo, setTelefoneFixo] = useState("");
+  const [telefone_fixo, setTelefoneFixo] = useState("");
   const [logradouro, setLogradouro] = useState("");
   const [bairro, setBairro] = useState("");
   const [complemento, setComplemento] = useState("");
@@ -28,10 +29,28 @@ function App() {
   const [uf, setUF] = useState("");
   const [cep, setCEP] = useState("");
   const [email, setEmail] = useState("");
-  const [confirmEmail, setConfirmEmail] = useState("");
+  const [confirm_email, setConfirmEmail] = useState("");
   const [celular, setCelular] = useState("");
 
   // eslint-disable-line react-hooks/exhaustive-deps
+
+  const toastMessage = useRef(null);
+
+  const successToast = () =>
+    toastMessage.current.show({
+      severity: "success",
+      summary: "Cadastro concluído",
+      detail: "Cadastro realizado com sucesso",
+      time: 2000,
+    });
+
+  const errorToast = () =>
+    toastMessage.current.show({
+      severity: "error",
+      summary: "Ooops, algo deu errado",
+      detail: "Já existe um usuário registrado com esse e-mail",
+      time: 2000,
+    });
 
   const onChangeCountry = (e: { value: any }) => {
     setPais(e.value);
@@ -59,30 +78,37 @@ function App() {
   }
 
   async function handleCreateUser() {
-    await api.post("/create", {
-      name,
-      email,
-      confirmEmail,
-      cep,
-      telefoneFixo,
-      bairro,
-      municipio,
-      logradouro,
-      celular,
-      cpf,
-      numero,
-      uf,
-      complemento,
-      pais,
-    });
+    await api
+      .post("/create", {
+        name,
+        email,
+        confirm_email,
+        cep,
+        telefone_fixo,
+        bairro,
+        municipio,
+        logradouro,
+        celular,
+        cpf,
+        numero,
+        uf,
+        complemento,
+        pais,
+      })
+      .then(() => {
+        successToast();
+      })
+      .catch(() => {
+        errorToast();
+      });
   }
 
-  const notify = () =>
-    toast.promise(handleCreateUser(), {
-      loading: "Salvando...",
-      success: <b>Cadastro concluído</b>,
-      error: <b>Ocorreu um erro durante o processo</b>,
-    });
+  // const notify = () =>
+  //   toast.promise(handleCreateUser(), {
+  //     loading: "Salvando...",
+  //     success: <b>Cadastro concluído</b>,
+  //     error: <b>Ocorreu um erro durante o processo</b>,
+  //   });
 
   const countries = [
     { name: "África do Sul" },
@@ -137,10 +163,12 @@ function App() {
         <form
           onSubmit={(e: FormEvent) => {
             e.preventDefault();
-            notify();
+            // notify();
+            handleCreateUser();
           }}
         >
-          <Toaster />
+          {/* <Toaster /> */}
+          <Toast ref={toastMessage} />
           <Panel className="mypanel p-2" header="Dados Pessoais">
             <div className="formgrid grid">
               <div className="field col-12 md:col-2 mr-8 sm:col-6">
@@ -319,7 +347,7 @@ function App() {
                 </label>
                 <InputText
                   id="telFixo"
-                  value={telefoneFixo}
+                  value={telefone_fixo}
                   onChange={(e) => {
                     setTelefoneFixo(e.target.value);
                   }}
@@ -364,12 +392,12 @@ function App() {
               </div>
               <div className="field col-12 md:col-3 sm:col-6">
                 <label htmlFor="txtConfirmarEmail" className="font-medium">
-                  Confirmar e-amail
+                  Confirmar e-mail
                 </label>
                 <InputText
                   type="email"
                   id="txtConfirmarEmail"
-                  value={confirmEmail}
+                  value={confirm_email}
                   required
                   onChange={(e) => {
                     setConfirmEmail(e.target.value);
