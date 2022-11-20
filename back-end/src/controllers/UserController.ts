@@ -8,6 +8,10 @@ export class UserController {
 
     const service = new UserService();
 
+    if (userDTO.email !== userDTO.confirm_email) {
+      return res.status(400).json({message: "The email and confirmation must be the same."})
+    }
+
     const result = await service.create(userDTO);
 
     if (result instanceof Error) {
@@ -60,4 +64,6 @@ export class UserController {
 
     return res.json(result);
   }
+
+
 }
